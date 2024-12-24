@@ -1,5 +1,5 @@
 class BaseApi {
-  protected static readonly BaseUrl: string = "https://fakestoreapi.com/";
+  protected static readonly BaseUrl: string = "https://dummyjson.com/";
   protected static async BaseGetRequestAsync<T>(endpoint: string): Promise<T> {
     try {
       const response = await fetch(`${this.BaseUrl}${endpoint}`, {

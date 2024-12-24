@@ -1,13 +1,35 @@
 export interface Product {
   id: number;
   title: string;
-  price: number;
   description: string;
   category: string;
-  image: string;
-  rating: Rating;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  thumbnail: string;
+  images: string[];
+  quantity: number;
 }
-export interface Rating {
-  rate: number;
-  count: number;
+
+export interface Dimensions {
+  width: number;
+  height: number;
+  depth: number;
+}
+
+export interface Meta {
+  createdAt: Date;
+  updatedAt: Date;
+  barcode: string;
+  qrCode: string;
+}
+
+export interface Review {
+  rating: number;
+  comment: string;
+  date: Date;
+  reviewerName: string;
+  reviewerEmail: string;
 }

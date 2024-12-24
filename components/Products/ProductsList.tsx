@@ -15,11 +15,12 @@ import { SearchProduct } from "../Core/Control/Search";
 const ProductsList = ({ navigation }: any) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  console.log("filteredProducts", filteredProducts);
 
   const getAllProducts = async () => {
     const res = await ProductDataService.GetAll();
-    setProducts(res);
-    setFilteredProducts(res);
+    setProducts(res?.products);
+    setFilteredProducts(res?.products);
   };
 
   const handleSearch = (text: string) => {
@@ -57,10 +58,8 @@ const ProductsList = ({ navigation }: any) => {
         />
       </View>
 
-      <Text style={styles.HeaderText}>Shop your favorite product</Text>
-
       <FlatList
-        data={filteredProducts} // Use filteredProducts instead of products
+        data={filteredProducts}
         renderItem={renderProduct}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
@@ -82,11 +81,11 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: "100%",
-    height: 100,
+    height: 150,
     borderRadius: 10,
   },
   upperDiv: {
-    marginTop: 20,
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
@@ -109,8 +108,9 @@ const styles = StyleSheet.create({
   },
   HeaderText: {
     fontWeight: "600",
-    fontSize: 20,
-    marginVertical: 10,
+    fontSize: 18,
+    marginTop: 10,
+    marginBottom: 10,
   },
   productsContainer: {
     paddingBottom: 20,

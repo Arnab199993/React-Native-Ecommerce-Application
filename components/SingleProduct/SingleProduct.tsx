@@ -8,18 +8,23 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { Product } from "../Entity/Product";
+import { useDispatch } from "react-redux";
+import CartManagement from "../Redux/CartMenagement";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-const SingleProduct = () => {
+const SingleProduct = (props: any) => {
   const { params }: any = useRoute();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   const fetchProductDetails = async () => {
     try {
       const res = await fetch(
-        `https://fakestoreapi.com/products/${params?.productId}`
+        `https://dummyjson.com/products/${params?.productId}`
       );
       const data = await res?.json();
       setProduct(data);
@@ -50,24 +55,52 @@ const SingleProduct = () => {
     );
   }
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Image source={{ uri: product.image }} style={styles.productImage} />
-      <Text style={styles.productTitle}>{product.title}</Text>
-      <Text style={styles.productPrice}>${product.price}</Text>
-      <Text style={styles.productDescription}>{product.description}</Text>
+  const handleAddToCart = (Product: Product) => {
+    dispatch(CartManagement.actions.addProductToCart(Product));
+    ToastAndroid.show(
+      "Product has been added to the cart successfully",
+      ToastAndroid.LONG
+    );
+  };
 
-      <TouchableOpacity style={styles.addToCartButton}>
-        <Text style={styles.addToCartText}>Add to Cart</Text>
-      </TouchableOpacity>
-    </ScrollView>
+  const handleGotoCart = (Product: Product) => {
+    props.navigation.navigate("Checkout");
+    dispatch(CartManagement.actions.addProductToCart(Product));
+  };
+
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Image
+            source={{ uri: product.thumbnail }}
+            style={styles.productImage}
+          />
+          <Text style={styles.productTitle}>{product.title}</Text>
+          <Text style={styles.productPrice}>${product.price}</Text>
+          <Text style={styles.productDescription}>{product.description}</Text>
+          <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={() => handleAddToCart(product)}
+          >
+            <Text style={styles.addToCartText}>Add to Cart</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleGotoCart(product)}
+            style={styles.buyNowBtn}
+          >
+            <Text style={styles.addToCartText}>Buy Now</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    // backgroundColor: "#f5f5f5",
     marginTop: 40,
   },
   loaderContainer: {
@@ -92,6 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     resizeMode: "contain",
+    objectFit: "contain",
   },
   productTitle: {
     fontSize: 24,
@@ -120,6 +154,14 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buyNowBtn: {
+    marginTop: 5,
+    backgroundColor: "#FDDA0D",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 40,
   },
 });
 
